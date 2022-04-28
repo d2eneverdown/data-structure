@@ -1,0 +1,53 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+#define maxsize 10;
+typedef struct stack {
+	int data[10];
+	int top;
+}stack;
+stack s1,s2;
+void InitStack(stack& s) {
+	s.top = -1;
+}
+bool Push(stack& s,int x) {
+	if (s.top == 10) {
+		printf("栈满!");
+		return false;
+	}
+	s.data[++s.top] = x;
+	return true;
+}
+bool Pop(stack& s, int& x) {
+	if(s.top==-1) {
+		printf("栈空!");
+		return false;
+	}
+	x = s.data[s.top--];
+	return true;
+}
+void MinStack(stack& s2,int a) {
+	int x;
+	if (s2.top == -1)
+		Push(s2, a);
+	else {
+		x = s2.data[s2.top];
+		if (x <= a) {
+			Pop(s2, x);
+			Push(s2, a);
+			Push(s2, x);
+		}
+		else
+			Push(s2, a);
+	}
+}
+int main(void) {
+	int a[5] = { 4,1,6,2,8 };
+	InitStack(s1);
+	InitStack(s2);
+	for (int i = 0; i < 5; i++) {
+		Push(s1, a[i]);
+		MinStack(s2, a[i]);
+	}
+	printf("%d", s2.data[s2.top]);
+}
