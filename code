@@ -1,0 +1,92 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+#define MAXLEN 255
+typedef struct {
+	char ch[MAXLEN];
+	int length;
+}SString;
+SString T;
+SString S;
+void get_next(SString T, int next[]);
+int Index_KMP(SString S, SString T, int next[]);
+void Init(SString &S, SString &T) {//
+	S.length = 6;
+	T.length = 3;
+	S.ch[1] = 'a';
+	S.ch[2] = 'a';
+	S.ch[3] = 'b';
+	S.ch[4] = 'a';
+	S.ch[5] = 'a';
+	S.ch[6] = 'c';
+	T.ch[1] = 'a';
+	T.ch[2] = 'a';
+	T.ch[3] = 'c';
+}
+void getchar_(SString &S,SString &T) {
+	int i=1,j=1;
+	char ch=NULL;
+	printf("INPUT S:\n");
+	while(i<=9) {
+		scanf_s("%c",&ch);
+		//getchar();//加入这句话，可以每次输入一个数按一次回车，不加的话，直接输入一个字符串
+		S.ch[i] = ch;
+		printf("%c",S.ch[i]);
+		S.length++;
+		i++;
+	}
+	getchar();//吃掉回车,scanf %c 每次会读入回车，一次会减少循环，用getchar（）把缓冲区中的回车“吃掉”
+	printf("\n%d", S.length);
+	printf("\nINPUT T:\n");
+	while(j<=6) {
+		scanf_s("%c", &ch);
+		//getchar();//同上163行
+		T.ch[j] = ch;
+		printf("%c", T.ch[j]);
+		T.length++;
+		j++;
+	}
+	printf("\n%d\n", T.length);
+
+}
+int main() {	
+	int next[10];
+	int site;
+	//Init(S, T);
+	getchar_(S, T);
+	get_next(T, next);
+	for (int i = 1; i <= T.length; i++) {
+		printf("%d", next[i]);
+	}
+	site=Index_KMP(S, T, next);
+	printf("\n%d", site);
+}
+//求next[]数组
+void get_next(SString T, int next[]) {
+	int i = 1, j = 0;
+	next[1] = 0;
+	while (i < T.length) {
+		if (j == 0 || T.ch[i] == T.ch[j]) {
+			++i; ++j;
+			next[i] = j;
+		}
+		else
+			j = next[j];
+	}
+}
+//根据生成的next[]实现KMP算法
+int Index_KMP(SString S, SString T, int next[]) {
+	int i = 1, j = 1;
+	while (i <= S.length && j <= T.length) {
+		if (j == 0 || S.ch[i] == T.ch[j]) {
+			++i; 
+			j++;
+		}
+		else
+			j = next[j];
+	}
+	if (j > T.length)
+		return i - T.length;
+	else
+		return 0;
+}
