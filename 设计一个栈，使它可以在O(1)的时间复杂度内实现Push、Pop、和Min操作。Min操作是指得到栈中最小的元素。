@@ -51,3 +51,4 @@ int main(void) {
 	}
 	printf("%d", s2.data[s2.top]);
 }
+
